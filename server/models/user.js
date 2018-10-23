@@ -68,8 +68,26 @@ UserSchema.statics.findByToken = function (token) {
     });
 };
 
-// NOTE: email validation (uniqueness and format) doesn't seem to work
-// when this pre function is used.
+UserSchema.statics.findByCredentials = function(email, password) {
+  var User = this;
+
+  return User.findOne({email}).then((user) => {
+    if (user) {
+      return new Promise((resolve, reject) => {
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (result) {
+            resolve(user);
+          } else {
+            reject();
+          }
+        });
+      });
+    } else {
+      return Promise.reject();
+    }
+  });
+};
+
 UserSchema.pre('save', function (next) {
   var user = this;
 
