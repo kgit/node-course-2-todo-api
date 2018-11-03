@@ -183,6 +183,8 @@ describe('PATCH /todos/:id', () => {
         expect(updatedTodo.text).toBe(updatedText);
         expect(updatedTodo.completed).toBe(true);
         expect(updatedTodo.completedAt).toBeGreaterThan(0);
+        // Also works:
+        // expect(typeof updatedTodo.completedAt).toBe('number');
       })
       .end(done);
   });
@@ -312,6 +314,11 @@ describe('POST /users/login', () => {
         User.findById(users[1]._id).then((user) => {
           expect(user.tokens[1]).toHaveProperty('access', 'auth');
           expect(user.tokens[1]).toHaveProperty('token', res.headers['x-auth']);
+          // This works too:
+          // expect(user.toObject().tokens[1]).toMatchObject({
+          //   access: 'auth',
+          //   token: res.headers['x-auth']
+          // });
           done();
         }).catch((e) => done(e));
       });
